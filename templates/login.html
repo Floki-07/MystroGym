@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - MystroGym</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d3748;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link a {
+      color: #4a5568;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link a:hover {
+      background: #f7fafc;
+      color: #2d3748;
+      transform: translateY(-1px);
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .hero-section {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: white;
+    }
+
+    .hero-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-section p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-card h2 {
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      color: #4a5568;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: #a0aec0;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 1rem 2rem;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-icon {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-icon svg {
+      width: 48px;
+      height: 48px;
+      color: #667eea;
+    }
+
+    .forgot-password {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .forgot-password a {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    .security-notice {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: #1e40af;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+      
+      .login-card {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+      
+      .container {
+        margin: 2rem auto;
+      }
+    }
+
+    /* Loading animation for button */
+    .login-btn.loading::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Error message styling */
+    .error-message {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      text-align: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .error-message.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">MystroGym</div>
+    <div class="nav-link">
+      <a href="/">Home</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="hero-section">
+      <h1>Admin Access</h1>
+      <p>Secure login portal for administrators to access feedback analytics and management tools.</p>
+    </div>
+
+    <div class="login-card">
+      <div class="login-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      
+      <h2>Admin Login</h2>
+      
+      <div class="security-notice">
+        🔒 This is a secure area. Please enter your administrator credentials.
+      </div>
+
+      <div id="error-message" class="error-message"></div>
+      
+      <form method="POST" id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input name="username" id="username" placeholder="Enter your username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input name="password" id="password" type="password" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          Login to Dashboard
+        </button>
+      </form>
+
+      <div class="forgot-password">
+        <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      const btn = document.getElementById('loginBtn');
+      btn.classList.add('loading');
+      btn.textContent = 'Signing in...';
+      btn.disabled = true;
+      
+      // Remove loading state after form submission (this would be handled by server response in real app)
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.textContent = 'Login to Dashboard';
+        btn.disabled = false;
+      }, 2000);
+    });
+
+    function showForgotPassword() {
+      alert('Please contact your system administrator to reset your password.');
+    }
+
+    // Example error handling (you would integrate this with your backend)
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+      
+      setTimeout(() => {
+        errorDiv.classList.remove('show');
+      }, 5000);
+    }
+
+    // Enhanced form validation
+    document.getElementById('username').addEventListener('input', function() {
+      this.setCustomValidity('');
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+      this.setCustomValidity('');
+    });
+  </script>
+</body>
+</html>

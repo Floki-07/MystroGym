@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - MystroGym</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d3748;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: #4a5568;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background: #f7fafc;
+      color: #2d3748;
+      transform: translateY(-1px);
+    }
+
+    .logout-btn {
+      background: linear-gradient(45deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: white;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .stat-icon.total { background: linear-gradient(45deg, #667eea, #764ba2); }
+    .stat-icon.positive { background: linear-gradient(45deg, #10b981, #059669); }
+    .stat-icon.negative { background: linear-gradient(45deg, #ef4444, #dc2626); }
+    .stat-icon.neutral { background: linear-gradient(45deg, #6b7280, #4b5563); }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .chart-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    .actions-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 2rem;
+    }
+
+    .actions-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .action-btn.secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .action-btn.primary:hover {
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn.secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .recent-feedback {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .feedback-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .feedback-item {
+      padding: 1rem;
+      border-left: 4px solid;
+      margin-bottom: 1rem;
+      border-radius: 0 8px 8px 0;
+      background: #f8fafc;
+    }
+
+    .feedback-item.positive { border-left-color: #10b981; }
+    .feedback-item.negative { border-left-color: #ef4444; }
+    .feedback-item.neutral { border-left-color: #6b7280; }
+
+    .feedback-text {
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .feedback-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .sentiment-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .sentiment-badge.positive {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .sentiment-badge.negative {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .sentiment-badge.neutral {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .loading {
+      text-align: center;
+      color: #6b7280;
+      padding: 2rem;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .dashboard-header h1 {
+        font-size: 2rem;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        justify-content: center;
+      }
+      
+      .feedback-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">MystroGym</div>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h1>Admin Dashboard</h1>
+      <p>Monitor and analyze customer feedback sentiment in real-time</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon total">📊</div>
+        <div class="stat-number" id="totalFeedbacks">-</div>
+        <div class="stat-label">Total Feedbacks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon positive">😊</div>
+        <div class="stat-number" id="positiveFeedbacks">-</div>
+        <div class="stat-label">Positive</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon negative">😞</div>
+        <div class="stat-number" id="negativeFeedbacks">-</div>
+        <div class="stat-label">Negative</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon neutral">😐</div>
+        <div class="stat-number" id="neutralFeedbacks">-</div>
+        <div class="stat-label">Neutral</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Sentiment Distribution</div>
+        <div class="chart-container">
+          <canvas id="sentimentChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Sentiment Trend Over Time</div>
+        <div class="chart-container">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <div class="actions-title">Quick Actions</div>
+      <div class="action-buttons">
+        <button class="action-btn primary" onclick="categorizeData()">
+          🏷️ Categorize Feedback
+        </button>
+        <button class="action-btn secondary" onclick="refreshData()">
+          🔄 Refresh Data
+        </button>
+        <button class="action-btn secondary" onclick="exportData()">
+          📥 Export Data
+        </button>
+      </div>
+    </div>
+
+    <div class="recent-feedback">
+      <div class="actions-title">Recent Feedback</div>
+      <div class="feedback-list" id="recentFeedbacks">
+        <div class="loading">
+          <span class="loading-spinner"></span>
+          Loading feedback data...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let sentimentChart, trendChart;
+    let allFeedbacks = [];
+
+    async function loadDashboard() {
+      try {
+        const response = await fetch('/feedbacks');
+        const data = await response.json();
+        allFeedbacks = data;
+
+        updateStats(data);
+        createCharts(data);
+        displayRecentFeedbacks(data);
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+        document.getElementById('recentFeedbacks').innerHTML = `
+          <div class="loading" style="color: #ef4444;">
+            ❌ Error loading feedback data. Please try again.
+          </div>
+        `;
+      }
+    }
+
+    function updateStats(data) {
+      const sentiments = { Positive: 0, Negative: 0, Neutral: 0 };
+      
+      data.forEach(fb => {
+        sentiments[fb.sentiment]++;
+      });
+
+      document.getElementById('totalFeedbacks').textContent = data.length;
+      document.getElementById('positiveFeedbacks').textContent = sentiments.Positive;
+      document.getElementById('negativeFeedbacks').textContent = sentiments.Negative;
+      document.getElementById('neutralFeedbacks').textContent = sentiments.Neutral;
+    }
+
+    function createCharts(data) {
+      const sentiments = { Positive: 0, Negative: 0, Neutral: 0 };
+      const trend = {};
+
+      data.forEach(fb => {
+        sentiments[fb.sentiment]++;
+        const date = new Date(fb.timestamp).toLocaleDateString();
+        if (!trend[date]) trend[date] = [];
+        trend[date].push(fb.polarity);
+      });
+
+      // Calculate average polarity per day
+      Object.keys(trend).forEach(date => {
+        const polarities = trend[date];
+        trend[date] = polarities.reduce((a, b) => a + b, 0) / polarities.length;
+      });
+
+      // Destroy existing charts if they exist
+      if (sentimentChart) sentimentChart.destroy();
+      if (trendChart) trendChart.destroy();
+
+      // Sentiment Distribution Chart
+      const ctx1 = document.getElementById('sentimentChart').getContext('2d');
+      sentimentChart = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(sentiments),
+          datasets: [{
+            data: Object.values(sentiments),
+            backgroundColor: ['#10b981', '#ef4444', '#6b7280'],
+            borderWidth: 0,
+            hoverOffset: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                usePointStyle: true
+              }
+            }
+          }
+        }
+      });
+
+      // Trend Chart
+      const ctx2 = document.getElementById('trendChart').getContext('2d');
+      trendChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: Object.keys(trend).sort(),
+          datasets: [{
+            label: 'Average Sentiment',
+            data: Object.keys(trend).sort().map(date => trend[date]),
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#667eea',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function displayRecentFeedbacks(data) {
+      const recentData = data.slice(-10).reverse(); // Last 10 feedbacks
+      const container = document.getElementById('recentFeedbacks');
+      
+      if (recentData.length === 0) {
+        container.innerHTML = '<div class="loading">No feedback data available.</div>';
+        return;
+      }
+
+      container.innerHTML = recentData.map(fb => `
+        <div class="feedback-item ${fb.sentiment.toLowerCase()}">
+          <div class="feedback-text">${fb.raw_message}</div>
+          <div class="feedback-meta">
+            <span>Score: ${fb.polarity.toFixed(2)}</span>
+            <span class="sentiment-badge ${fb.sentiment.toLowerCase()}">${fb.sentiment}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function categorizeData() {
+      const btn = event.target;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="loading-spinner"></span> Categorizing...';
+      btn.disabled = true;
+
+      try {
+        const response = await fetch('/categorize');
+        const result = await response.json();
+        
+        if (result.status === 'categorized') {
+          btn.innerHTML = '✅ Categorized Successfully';
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error categorizing:', error);
+        btn.innerHTML = '❌ Error';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 2000);
+      }
+    }
+
+    async function refreshData() {
+      const btn = event.target;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="loading-spinner"></span> Refreshing...';
+      btn.disabled = true;
+
+      await loadDashboard();
+      
+      btn.innerHTML = '✅ Refreshed';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }, 1000);
+    }
+
+    function exportData() {
+      const dataStr = JSON.stringify(allFeedbacks, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `feedback_data_${new Date().toISOString().split('T')[0]}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+
+    function logout() {
+      window.location.href = '/logout';
+    }
+
+    // Load dashboard when page loads
+    window.addEventListener('load', loadDashboard);
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+flask
+pymongo
+textblob
+nltk
+scikit-learn
+pandas  
