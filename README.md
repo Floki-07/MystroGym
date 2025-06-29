@@ -29,7 +29,7 @@ MystroGym is an intelligent feedback collection and analysis platform built for 
 - **MongoDB** – Feedback data storage
 - **Pandas / NumPy** – Data manipulation and aggregation
 - **NLTK / TextBlob** – Sentiment Analysis
-- **Char.js** – Data visualization
+- **Chart.js** – Data visualization
 
 ---
 
