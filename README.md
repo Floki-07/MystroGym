@@ -62,7 +62,7 @@ MystroGym/
    > Cleaned, tokenized, and prepared using NLTK.
 
 3. **Sentiment Analysis**  
-   > Performed using TextBlob or VADER.
+   > Performed using TextBlob.
 
 4. **Visualization**  
    >  Donut charts used to derive insights.
@@ -75,13 +75,15 @@ MystroGym/
 ## 📸 Screenshots
 
 ### 🔐 Admin Login  
-![Admin Login](screenshots/admin_login.png)
+![Screenshot (175)](https://github.com/user-attachments/assets/198b92e1-632e-4f09-a894-8925b034a7a2)
+
 
 ### 📝 Feedback Submission  
-![Feedback Form](screenshots/feedback_form.png)
+![Screenshot (176)](https://github.com/user-attachments/assets/466f944b-5065-4c83-b76f-04149b88e709)
 
 ### 📊 Dashboard View  
-![Dashboard](screenshots/dashboard.png)
+![Screenshot (178)](https://github.com/user-attachments/assets/0565b7e8-e4cf-4e39-974e-32a18ff5f05a)
+![Screenshot (179)](https://github.com/user-attachments/assets/a3bfa37e-772e-4a38-998b-a3bae14bc75d)
 
 ---
 
